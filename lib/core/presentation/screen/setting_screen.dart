@@ -1,6 +1,10 @@
+// lib/core/presentation/screen/setting_screen.dart
+import 'package:attandance_simple/core/component/buildProfile_components.dart';
 import 'package:attandance_simple/core/component/drawer_component.dart';
+import 'package:attandance_simple/core/cubit/cubit/me_cubit.dart';
 import 'package:attandance_simple/core/cubit/cubit_logout/logout_cubit.dart';
 import 'package:attandance_simple/core/cubit/cubit_logout/logout_state.dart';
+import 'package:attandance_simple/core/service/Auth_service.dart';
 import 'package:attandance_simple/local_storange/local_storange.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +16,7 @@ class SettingScreen extends StatelessWidget {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogCtx) {
         return AlertDialog(
           title: const Text('Konfirmasi Logout'),
           content: const SingleChildScrollView(
@@ -25,22 +29,21 @@ class SettingScreen extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               child: const Text('Batal'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(dialogCtx).pop(),
             ),
             TextButton(
               child: const Text('Log-out', style: TextStyle(color: Colors.red)),
               onPressed: () async {
                 final token = await LocalStorage().getToken();
                 if (token != null && token.isNotEmpty) {
-                  context.read<LogoutCubit>().logout(token);
+                  // pastikan LogoutCubit tersedia di tree (global atau di parent)
+                  dialogCtx.read<LogoutCubit>().logout(token);
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  ScaffoldMessenger.of(dialogCtx).showSnackBar(
                     const SnackBar(content: Text('Token tidak ditemukan')),
                   );
                 }
-                Navigator.of(context).pop();
+                Navigator.of(dialogCtx).pop();
               },
             ),
           ],
@@ -48,6 +51,7 @@ class SettingScreen extends StatelessWidget {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,87 +60,88 @@ class SettingScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 1,
       ),
-      drawer: DrawerComponent(),
-      body: ListView(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 40,
-                  backgroundImage: AssetImage('assets/Untitled.jpg'),
-                ),
-                const SizedBox(width: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Nama Penguji',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Cabang Penguji',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const Divider(),
+      body: BlocProvider(
+        create: (_) =>
+            MeCubit(auth: AuthService(), storage: LocalStorage())..load(),
+        child: BlocBuilder<MeCubit, MeState>(
+          builder: (context, state) {
+            if (state is MeLoading || state is MeInitial) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          _buildSettingsListTile(
-            context: context,
-            icon: Icons.edit_outlined,
-            title: 'Edit Profil',
-            onTap: () {
-              Navigator.pushNamed(context, '/editProfile');
-            },
-          ),
-          _buildSettingsListTile(
-            context: context,
-            icon: Icons.lock_outline,
-            title: 'Ubah Password',
-            onTap: () {
-              Navigator.pushNamed(context, '/forgotPassword');
-            },
-          ),
-          _buildSettingsListTile(
-            context: context,
-            icon: Icons.info_outline,
-            title: 'Tentang Aplikasi',
-            onTap: () {},
-          ),
+            if (state is MeLoaded) {
+              final me = state.me;
+              final name = me.username ?? 'User';
+              final role = (me.role?.toString() ?? 'Role');
+              final initial = (name.isNotEmpty ? name[0] : 'U')
+                  .toUpperCase(); // untuk avatar huruf
 
-          const Divider(),
+              return ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  BuildprofileComponents(
+                    name: name,
+                    role: role,
+                    alias:
+                        initial, // komponen akan menampilkan huruf jika tidak ada foto
+                  ),
+                  const Divider(),
 
-          BlocConsumer<LogoutCubit, LogoutState>(
-            builder: (context, state) {
-              return ListTile(
-                leading: Icon(Icons.logout, color: Colors.red[700]),
-                title: Text(
-                  'Log Out',
-                  style: TextStyle(color: Colors.red[700]),
-                ),
-                onTap: () => _showLogoutDialog(context),
+                  _buildSettingsListTile(
+                    context: context,
+                    icon: Icons.edit_outlined,
+                    title: 'Edit Profil',
+                    onTap: () => Navigator.pushNamed(context, '/editProfile'),
+                  ),
+                  _buildSettingsListTile(
+                    context: context,
+                    icon: Icons.lock_outline,
+                    title: 'Ubah Password',
+                    onTap: () =>
+                        Navigator.pushNamed(context, '/forgotPassword'),
+                  ),
+                  _buildSettingsListTile(
+                    context: context,
+                    icon: Icons.info_outline,
+                    title: 'Tentang Aplikasi',
+                    onTap: () => Navigator.pushNamed(context, '/about'),
+                  ),
+
+                  const Divider(),
+
+                  BlocConsumer<LogoutCubit, LogoutState>(
+                    listener: (context, st) {
+                      if (st.isSucces) {
+                        Navigator.pushReplacementNamed(context, '/');
+                      } else if (st.error.isNotEmpty) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(st.error)));
+                      }
+                    },
+                    builder: (context, st) {
+                      return ListTile(
+                        leading: Icon(Icons.logout, color: Colors.red[700]),
+                        title: Text(
+                          'Log Out',
+                          style: TextStyle(color: Colors.red[700]),
+                        ),
+                        onTap: () => _showLogoutDialog(context),
+                      );
+                    },
+                  ),
+                ],
               );
-            },
-            listener: (context, state) {
-              if (state.isSucces) {
-                Navigator.pushReplacementNamed(context, '/');
-              } else if (state.error.isNotEmpty) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.error)));
-              }
-            },
-          ),
-        ],
+            }
+
+            if (state is MeError) {
+              return Center(child: Text('Error: ${state.message}'));
+            }
+
+            // Fallback WAJIB supaya builder selalu mengembalikan Widget
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

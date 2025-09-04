@@ -1,4 +1,5 @@
 import 'package:attandance_simple/core/component/appBar_component.dart';
+import 'package:attandance_simple/core/component/appbar_lomba.dart';
 import 'package:attandance_simple/core/component/color_component.dart';
 import 'package:attandance_simple/core/cubit/cubit_input_team/input_team_cubit.dart';
 import 'package:attandance_simple/core/cubit/cubit_input_team/input_team_state.dart';
@@ -232,7 +233,7 @@ class _TeamScreenState extends State<TeamScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarComponent(),
+      appBar: AppbarLomba(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorComponent.addColor,
         child: const Icon(Icons.add, color: ColorComponent.bgColor),

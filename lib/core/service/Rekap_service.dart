@@ -6,7 +6,7 @@ import 'package:attandance_simple/local_storange/local_storange.dart';
 
 class RekapService {
   final Dio _dio;
-  static const String baseUrl = 'http://10.0.2.2:8000';
+  static const String baseUrl = 'https://server.192.my.id';
   static const String _rekapPath = '/api/ekskul-attendance/rekap'; // GET
 
   RekapService({Dio? dio})

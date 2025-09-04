@@ -1,3 +1,4 @@
+import 'package:attandance_simple/core/component/appbar_lomba.dart';
 import 'package:attandance_simple/core/cubit/cubit_individu_participants/individu_participants_cubit.dart';
 import 'package:attandance_simple/core/cubit/cubit_individu_participants/individu_participants_state.dart';
 import 'package:flutter/material.dart';
@@ -163,7 +164,7 @@ class _IndividuRoundScreenState extends State<IndividuRoundScreen> {
         }
       },
       child: Scaffold(
-        appBar: AppbarComponent(),
+        appBar: AppbarLomba(),
         floatingActionButton: isStatusSelesai
             ? null
             : BlocBuilder<IndividuParticipantsCubit, IndividuParticipantsState>(

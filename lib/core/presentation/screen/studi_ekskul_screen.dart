@@ -1,4 +1,5 @@
 import 'package:attandance_simple/core/component/appBar_component.dart';
+import 'package:attandance_simple/core/component/appbar_ekskul.dart';
 import 'package:attandance_simple/core/component/drawer_component.dart';
 import 'package:attandance_simple/core/cubit/cubit_studi/studi_cubit.dart';
 import 'package:attandance_simple/core/cubit/cubit_studi/studi_state.dart';
@@ -25,8 +26,7 @@ class _StudiEkskulScreenState extends State<StudiEkskulScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarComponent(),
-      drawer: DrawerComponent(),
+      appBar: AppbarEkskul(),
       body: BlocBuilder<StudiCubit, StudiState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -85,9 +85,8 @@ class _StudiEkskulScreenState extends State<StudiEkskulScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => EkskulScreen(                        
-                studiId: studiId ?? 0,
-                infoStudi: label,),
+              builder: (context) =>
+                  EkskulScreen(studiId: studiId ?? 0, infoStudi: label),
             ),
           );
         },

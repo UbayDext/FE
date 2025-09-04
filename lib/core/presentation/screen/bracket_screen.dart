@@ -1,4 +1,5 @@
 import 'package:attandance_simple/core/component/appBar_component.dart';
+import 'package:attandance_simple/core/component/appbar_lomba.dart';
 import 'package:attandance_simple/core/cubit/cubit_bracket/bracket_cubit.dart';
 import 'package:attandance_simple/core/cubit/cubit_bracket/bracket_state.dart';
 import 'package:attandance_simple/core/models/bracket/get_bracket_public/get_bracket_public.dart';
@@ -200,7 +201,7 @@ class _BracketScreenState extends State<BracketScreen> {
     final height = MediaQuery.of(context).size.height * 0.60;
 
     return Scaffold(
-      appBar: AppbarComponent(),
+      appBar: AppbarLomba(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

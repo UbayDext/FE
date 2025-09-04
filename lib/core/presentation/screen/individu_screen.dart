@@ -1,3 +1,4 @@
+import 'package:attandance_simple/core/component/appbar_lomba.dart';
 import 'package:attandance_simple/core/models/individu/get_individu_public/datum.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -126,7 +127,7 @@ class _IndividuScreenState extends State<IndividuScreen> {
       child: BlocBuilder<IndividuStatusCubit, IndividuStatusState>(
         builder: (context, state) {
           return Scaffold(
-            appBar: AppbarComponent(),
+            appBar: AppbarLomba(),
             floatingActionButton: FloatingActionButton(
               backgroundColor: ColorComponent.addColor,
               onPressed: state.status == DataStatus.success

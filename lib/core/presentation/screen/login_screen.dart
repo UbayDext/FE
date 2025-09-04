@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     backgroundColor: Colors.green,
                   ),
                 );
-                Navigator.pushReplacementNamed(context, '/home'); // Ganti dengan route home Anda
+                Navigator.pushReplacementNamed(context, '/navbar'); // Ganti dengan route home Anda
               }
 
               if (state.error.isNotEmpty) {

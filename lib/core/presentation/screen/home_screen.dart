@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
         page = const RaceScreen();
         break;
       case 'Achievement':
-        page = const AchievementScreen();
+        // page = const AchievementScreen();
         break;
       case 'Students':
         page = const StudiScreen();
@@ -47,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarComponent(),
-      drawer: DrawerComponent(),
       body: BlocProvider(
         create: (_) =>
             MeCubit(auth: AuthService(), storage: LocalStorage())..load(),
@@ -71,7 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       BuildprofileComponents(
                         name: name,
                         role: role,
-                        imageAssets: 'assets/profile_picture.png',
+                        onTap: () {
+                          Navigator.pushNamed(context, '/profile');
+                        },
                       ),
                       const SizedBox(height: 24),
                       _buildMenuGrid(),

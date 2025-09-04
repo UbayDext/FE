@@ -1,4 +1,5 @@
 import 'package:attandance_simple/core/component/appBar_component.dart';
+import 'package:attandance_simple/core/component/appbar_lomba.dart';
 import 'package:attandance_simple/core/component/drawer_component.dart';
 import 'package:attandance_simple/core/cubit/cubit_individu_status/individu_status_cubit.dart';
 import 'package:attandance_simple/core/cubit/cubit_lomba/lomba_cubit.dart';
@@ -71,8 +72,8 @@ class _RaceScreenState extends State<RaceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppbarComponent(),
-      drawer: DrawerComponent(),
+      appBar: AppbarLomba(),
+
       body: BlocListener<LombaCubit, LombaState>(
         listenWhen: (previous, current) =>
             previous.actionStatus != current.actionStatus,

@@ -11,28 +11,20 @@ import 'package:attandance_simple/core/cubit/cubit_logout/logout_cubit.dart';
 import 'package:attandance_simple/core/cubit/cubit_register/register_cubit.dart';
 import 'package:attandance_simple/core/cubit/cubit_student/student_import_cubit.dart';
 import 'package:attandance_simple/core/cubit/cubit_studi/studi_cubit.dart';
-import 'package:attandance_simple/core/model/Champion_model.dart';
-import 'package:attandance_simple/core/model/Date_ekskul_model.dart';
-import 'package:attandance_simple/core/model/Race_ekskul_model.dart';
-import 'package:attandance_simple/core/model/Siswa_studi_model.dart';
-import 'package:attandance_simple/core/model/Solo_round_model.dart';
-import 'package:attandance_simple/core/model/Team_round_model.dart';
-import 'package:attandance_simple/core/model/Trofi_model.dart';
-import 'package:attandance_simple/core/model/attandence_ekskul_model.dart';
-import 'package:attandance_simple/core/model/info_studi_model.dart';
-import 'package:attandance_simple/core/model/lomba_model.dart';
-import 'package:attandance_simple/core/model/round_model.dart';
-import 'package:attandance_simple/core/model/study_model.dart';
+import 'package:attandance_simple/core/presentation/screen/about_app_screen.dart';
 import 'package:attandance_simple/core/presentation/screen/achievement_screen.dart';
 import 'package:attandance_simple/core/presentation/screen/edit_profile_screen.dart';
 import 'package:attandance_simple/core/presentation/screen/forgot_password_screen.dart';
 import 'package:attandance_simple/core/presentation/screen/home_screen.dart';
 import 'package:attandance_simple/core/presentation/screen/login_screen.dart';
+import 'package:attandance_simple/core/presentation/screen/navbar_screen.dart';
+import 'package:attandance_simple/core/presentation/screen/profile_screen.dart';
 import 'package:attandance_simple/core/presentation/screen/race_screen.dart';
 import 'package:attandance_simple/core/presentation/screen/register_screen.dart';
 import 'package:attandance_simple/core/presentation/screen/reset_password_screen.dart';
 import 'package:attandance_simple/core/presentation/screen/studi_ekskul_screen.dart';
 import 'package:attandance_simple/core/presentation/screen/studi_screen.dart';
+import 'package:attandance_simple/core/presentation/view/login_view.dart';
 import 'package:attandance_simple/core/service/Individu_race_service.dart';
 import 'package:attandance_simple/core/service/Team_service_input.dart';
 import 'package:attandance_simple/core/service/bracket_service.dart';
@@ -57,33 +49,6 @@ Future<void> main() async {
   Intl.defaultLocale = 'id_ID';
 
   await LocalStorage().init();
-
-  Hive.registerAdapter(LombaModelAdapter());
-  Hive.registerAdapter(DateEkskulModelAdapter());
-  Hive.registerAdapter(AttandenceEkskulModelAdapter());
-  Hive.registerAdapter(RaceEkskulModelAdapter());
-  Hive.registerAdapter(RoundModelAdapter());
-  Hive.registerAdapter(StudyModelAdapter());
-  Hive.registerAdapter(TeamRoundModelAdapter());
-  Hive.registerAdapter(SoloRoundModelAdapter());
-  Hive.registerAdapter(ChampionModelAdapter());
-  Hive.registerAdapter(TrofiModelAdapter());
-  Hive.registerAdapter(EkskulDataStorangeAdapter());
-  Hive.registerAdapter(SiswaStudiModelAdapter());
-
-  await Hive.openBox<LombaModel>('lomba_model');
-  await Hive.openBox<DateEkskulModel>('date_ekskul_model');
-  await Hive.openBox<AttandenceEkskulModel>('attandence_ekskul_model');
-  await Hive.openBox<RaceEkskulModel>('Race_ekskul_model');
-  await Hive.openBox<RoundModel>('round_model');
-  await Hive.openBox<InfoStudiModel>('info_studi_model');
-  await Hive.openBox<StudyModel>('study_model');
-  await Hive.openBox<TeamRoundModel>('Team_round_model');
-  await Hive.openBox<SoloRoundModel>('Solo_round_model');
-  await Hive.openBox<ChampionModel>('Champion_model');
-  await Hive.openBox<TrofiModel>('Trofi_model');
-  await Hive.openBox<EkskulDataStorange>('Ekskul_data_storange');
-  await Hive.openBox<SiswaStudiModel>('Siswa_studi_model');
 
   runApp(const MyApp());
 }
@@ -110,14 +75,13 @@ class MyApp extends StatelessWidget {
         BlocProvider<ResetPasswordCubit>(
           create: (_) => ResetPasswordCubit(AuthService()),
         ),
-        BlocProvider<LombaCubit>(
-          create: (_) => LombaCubit(LombaService()),
-        ),
+        BlocProvider<LombaCubit>(create: (_) => LombaCubit(LombaService())),
         BlocProvider<IndividuStatusCubit>(
           create: (_) => IndividuStatusCubit(IndividuStatusService()),
         ),
         BlocProvider<IndividuParticipantsCubit>(
-          create: (_) => IndividuParticipantsCubit(IndividuParticipantsService()),
+          create: (_) =>
+              IndividuParticipantsCubit(IndividuParticipantsService()),
         ),
         BlocProvider<TeamInputCubit>(
           create: (_) => TeamInputCubit(TeamInputService()),
@@ -142,6 +106,8 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => LoginScreen(),
           '/login': (context) => LoginScreen(),
+          '/navbar': (context) => NavbarScreen(),
+          '/loginview': (context) => const LoginView(),
           '/register': (context) => RegisterScreen(),
           '/forgotPassword': (context) => ForgotPasswordScreen(),
           '/resetPassword': (context) => ResetPasswordScreen(),
@@ -149,8 +115,9 @@ class MyApp extends StatelessWidget {
           '/ekskul': (context) => const StudiEkskulScreen(),
           '/editProfile': (context) => const EditProfileScreen(),
           '/eksport': (context) => const RaceScreen(),
-          '/achievement': (context) => const AchievementScreen(),
           '/siswa': (context) => const StudiScreen(),
+          '/about': (context) => const AboutAppScreen(),
+          // '/profile': (context) => const ProfileScreen(),
         },
       ),
     );

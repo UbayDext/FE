@@ -8,7 +8,6 @@ class AttendanceService {
 
   static const String _base = 'https://server.192.my.id/api/';
 
-  // ⛏️ SESUAIKAN DENGAN ROUTE BE
   static const String _dailyPath  = 'ekskul-attendance/daily';
   static const String _upsertPath = 'ekskul-attendance/update';
 

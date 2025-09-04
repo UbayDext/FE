@@ -9,7 +9,7 @@ class EkskulService {
   late Dio _dio;
 
   EkskulService() {
-    _dio = Dio(BaseOptions(baseUrl: 'http://server.192.my.id/api'));
+    _dio = Dio(BaseOptions(baseUrl: 'https://server.192.my.id/api'));
 
     _dio.interceptors.add(
       InterceptorsWrapper(

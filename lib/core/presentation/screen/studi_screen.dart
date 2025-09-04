@@ -25,7 +25,6 @@ class _StudiScreenState extends State<StudiScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarComponent(),
-      drawer: DrawerComponent(),
       body: BlocBuilder<StudiCubit, StudiState>(
         builder: (context, state) {
           if (state.isLoading) {
@@ -84,11 +83,11 @@ class _StudiScreenState extends State<StudiScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ClassScreen(                        
+              builder: (context) => ClassScreen(
                 studiId: studiId ?? 0,
                 infoStudi: label,
                 classInfo: label,
-                ),
+              ),
             ),
           );
         },
